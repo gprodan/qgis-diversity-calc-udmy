@@ -32,7 +32,7 @@ from .resources import *
 # Import the code for the dialog
 from .diversity_calc_dialog import DiversityCalcDialog
 # import dc_summarizePoly function 
-from .diversity_functions import dc_summarizePoly, dc_mergeDictionaries
+from .diversity_functions import dc_summarizePoly, dc_mergeDictionaries, dc_resultString
 
 import os.path
 
@@ -225,5 +225,5 @@ class DiversityCalc:
                 QgsMessageLog.logMessage("Summary: {}".format(dctSummary), "Diversity Calculator", level=Qgis.Info)
                 dctMain = dc_mergeDictionaries(dctMain, sCategory, dctSummary)
 
-            QMessageBox.information(self.dlg, "Summary", str(dctMain))
+            QMessageBox.information(self.dlg, "Summary", dc_resultString(dctMain))
 

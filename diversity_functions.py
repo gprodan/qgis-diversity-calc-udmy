@@ -1,4 +1,4 @@
-
+import math
 
 def dc_summarizePoly(poly, lyrPoint, fldSpecies):
     ##############################################################
@@ -72,3 +72,101 @@ def dc_mergeDictionaries(dMain, cat, dPoly):
         dMain[cat] = dPoly
 
     return dMain
+
+
+def dc_richness(dict):
+    ##############################################################
+    #
+    # This function takes as inputs the following parameters:
+    #     dict       = a dictionary containing summary information for a category
+    #                  The keys are the names of the species occuring in the polygon
+    #                  and the values are the number of observations of that species
+    #                  in the polygon
+    #
+    # The purpose of the function is to calculate species richness from the dict
+    # provided above, which is just the total number of species observed or the
+    # length of the dictionaries
+
+    return len(dict)
+
+
+def dc_shannons(dict):
+    ##############################################################
+    #
+    # This function takes as inputs the following parameters:
+    #     dict       = a dictionary containing summary information for a polygon
+    #                  The keys are the names of the species occuring in the polygon
+    #                  and the values are the number of observations of that species
+    #                  in the polygon
+    #
+    # The purpose of the function is to calculate shannons diversity index from 
+    # the dict provided above.
+
+    # first calculate the total number of observations
+    total = sum(dict.values())
+
+    # set the initial value to 0
+    shannons = 0
+
+    # loop through all the species counts in the dictionary
+    for count in dict.values():
+        # calculate proportion of total observations
+        prop = count/total
+
+        shannons += prop*math.log(prop)
+
+    return abs(shannons)
+
+def dc_simpsons(dict):
+    ##############################################################
+    #
+    # This function takes as inputs the following parameters:
+    #     dict       = a dictionary containing summary information for a polygon
+    #                  The keys are the names of the species occuring in the polygon
+    #                  and the values are the number of observations of that species
+    #                  in the polygon
+    #
+    # The purpose of the function is to calculate simpsons diversity index from 
+    # the dict provided above.
+
+    # first calculate the total number of observations
+    total = sum(dict.values())
+
+    # set the initial value to 0
+    simpsons = 0
+
+    # loop through all the species counts in the dictionary
+    for count in dict.values():
+        # calculate proportion of total observations
+        prop = count/total
+
+        simpsons += prop*prop
+
+    return abs(simpsons)
+
+
+def dc_evenness(dict):
+    ##############################################################
+    #
+    # This function takes as inputs the following parameters:
+    #     dict       = a dictionary containing summary information for a polygon
+    #                  The keys are the names of the species occuring in the polygon
+    #                  and the values are the number of observations of that species
+    #                  in the polygon
+    #
+    # The purpose of the function is to calculate species evenness index from 
+    # the dict provided above. Evenness will be 1 when all the species have the 
+    # same number of observations and lower values as some species have greater 
+    # numbers of observations than others
+
+    # maximum value that Shannons index can be is the log of the total number of species (richness)
+    mmax = math.log(dc_richness(dict))
+
+    return dc_shannons(dict)/mmax
+
+
+def dc_resultString(dict):
+    result = ""
+    for category, summary in dict.items():
+        result += "{}: {}  {:2.3f}  {:2.3f}  {:2.3f}\n".format(category, dc_richness(summary), dc_shannons(summary), dc_simpsons(summary), dc_evenness(summary))
+    return result
